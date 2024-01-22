@@ -1,0 +1,120 @@
+"use strict";
+
+/**
+ * add event on element
+ */
+
+const addEventOnElem = function (elem, type, callback) {
+  if (elem.length > 1) {
+    for (let i = 0; i < elem.length; i++) {
+      elem[i].addEventListener(type, callback);
+    }
+  } else {
+    elem.addEventListener(type, callback);
+  }
+};
+
+/**
+ * navbar toggle
+ */
+
+const navbar = document.querySelector("[data-navbar]");
+const navbarLinks = document.querySelectorAll("[data-nav-link]");
+const navToggler = document.querySelector("[data-nav-toggler]");
+
+const toggleNavbar = function () {
+  navbar.classList.toggle("active");
+  navToggler.classList.toggle("active");
+  document.body.classList.toggle("active");
+};
+
+addEventOnElem(navToggler, "click", toggleNavbar);
+
+const closeNavbar = function () {
+  navbar.classList.remove("active");
+  navToggler.classList.remove("active");
+  document.body.classList.remove("active");
+};
+
+addEventOnElem(navbarLinks, "click", closeNavbar);
+
+/**
+ * header active
+ */
+
+const header = document.querySelector("[data-header]");
+
+const activeHeader = function () {
+  if (window.scrollY > 300) {
+    header.classList.add("active");
+  } else {
+    header.classList.remove("active");
+  }
+};
+
+addEventOnElem(window, "scroll", activeHeader);
+
+/**
+ * toggle active on add to fav
+ */
+
+const addToFavBtns = document.querySelectorAll("[data-add-to-fav]");
+
+const toggleActive = function () {
+  this.classList.toggle("active");
+};
+
+addEventOnElem(addToFavBtns, "click", toggleActive);
+
+/**
+ * scroll reveal effect
+ */
+
+const sections = document.querySelectorAll("[data-section]");
+
+const scrollReveal = function () {
+  for (let i = 0; i < sections.length; i++) {
+    if (sections[i].getBoundingClientRect().top < window.innerHeight / 1.5) {
+      sections[i].classList.add("active");
+    } else {
+      sections[i].classList.remove("active");
+    }
+  }
+};
+
+scrollReveal();
+
+addEventOnElem(window, "scroll", scrollReveal);
+
+/**
+ * scroll to About
+ */
+
+const aboutLink = document.getElementById("aboutLink");
+
+const scrollToAbout = function (e) {
+  e.preventDefault();
+
+  var aboutSection = document.getElementById("section2");
+  const targetPosition = aboutSection.offsetTop;
+  const startPosition = window.pageYOffset;
+  const distance = targetPosition - startPosition;
+  let startTime = null;
+
+  const smoothScroll = function (currentTime) {
+    if (startTime === null) startTime = currentTime;
+    const progress = currentTime - startTime;
+    const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+    const newPosition =
+      easeInOutQuad(progress / 1000) * distance + startPosition;
+    window.scrollTo(0, newPosition);
+
+    if (progress < 1000) {
+      requestAnimationFrame(smoothScroll);
+    }
+  };
+
+  requestAnimationFrame(smoothScroll);
+};
+
+addEventOnElem(aboutLink, "click", scrollToAbout);
